@@ -1,7 +1,13 @@
 
 """Routes incoming commands to the appropriate handler."""
-from commands import time_command, weather_command, web_search_command
-from commands import system_command, notes_command
+from commands import (
+    time_command,
+    weather_command,
+    web_search_command,
+    system_command,
+    notes_command,
+    reminder_command,
+)
 from utils.ollama_client import OllamaClient
 
 _client = OllamaClient()
@@ -12,12 +18,13 @@ SYSTEM_PROMPT = (
 
 
 def route(command: str) -> str:
-    """Try each command handler; fall back to AI if none matches."""
     command = command.lower().strip()
-
+    if command in ("exit", "quit", "bye", "shutdown jarvis"):
+        return "exit"
     for handler in [
         time_command,
         weather_command,
+        reminder_command,
         web_search_command,
         system_command,
         notes_command,
@@ -25,6 +32,4 @@ def route(command: str) -> str:
         result = handler.handle(command)
         if result is not None:
             return result
-
-    # Fallback to LLM
     return _client.generate(command, system=SYSTEM_PROMPT)
