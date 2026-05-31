@@ -1,6 +1,15 @@
+# Jarvis AI — Python dependencies
+# Install with: pip install -r requirements.txt
 
-SpeechRecognition
-requests
-pyttsx3
-pyaudio
-python-dotenv
+# Voice input
+SpeechRecognition>=3.10.0
+pyaudio>=0.2.14
+
+# TTS (cross-platform fallback)
+pyttsx3>=2.90
+
+# HTTP (used by OllamaClient)
+requests>=2.31.0
+
+# Optional: offline speech recognition (faster-whisper backend)
+# faster-whisper>=0.10.0
