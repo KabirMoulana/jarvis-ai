@@ -1,15 +1,19 @@
-# Jarvis AI — Python dependencies
-# Install with: pip install -r requirements.txt
-
-# Voice input
+# ── Core ──────────────────────────────────────────────────────────────────────
 SpeechRecognition>=3.10.0
+pyttsx3>=2.90
+requests>=2.31.0
+python-dotenv>=1.0.0
 pyaudio>=0.2.14
 
-# TTS (cross-platform fallback)
-pyttsx3>=2.90
+# ── System monitoring ─────────────────────────────────────────────────────────
+psutil>=5.9.0
 
-# HTTP (used by OllamaClient)
-requests>=2.31.0
+# ── Spotify (optional — macOS AppleScript works without this) ─────────────────
+# spotipy>=2.23.0
 
-# Optional: offline speech recognition (faster-whisper backend)
-# faster-whisper>=0.10.0
+# ── Face authentication (optional) ───────────────────────────────────────────
+# opencv-python>=4.8.0
+# face_recognition>=1.3.0
+
+# ── Dev / testing ─────────────────────────────────────────────────────────────
+pytest>=7.4.0
