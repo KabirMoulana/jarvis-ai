@@ -17,3 +17,16 @@ psutil>=5.9.0
 
 # ── Dev / testing ─────────────────────────────────────────────────────────────
 pytest>=7.4.0
+
+# ── Day 2 additions ───────────────────────────────────────────────────────────
+psutil>=5.9.0
+
+# Translation (optional — MyMemory API works without this)
+# googletrans==4.0.0rc1
+
+# Stocks (optional — Yahoo Finance JSON fallback works without this)
+# yfinance>=0.2.36
+
+# Google Calendar (optional)
+# google-api-python-client>=2.100.0
+# google-auth-oauthlib>=1.1.0
