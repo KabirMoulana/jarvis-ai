@@ -1,56 +1,47 @@
 """
 jarvis/voice/speaker.py
-Text-to-speech with platform auto-detection.
-  - macOS  → native `say` command (zero deps)
-  - others → pyttsx3 (pip install pyttsx3)
-Falls back to print-only if neither is available.
+Text-to-speech — uses pyttsx3 with the best available voice.
+Integrates with the HUD to update state during speech.
 """
+import pyttsx3
 import os
-import sys
-import subprocess
-from jarvis.config import TTS_RATE, TTS_VOLUME
+from jarvis.skills.voice_profile import build_engine
 
 
 class Speaker:
     def __init__(self):
-        self._engine   = None
-        self._platform = sys.platform
-        self._init_engine()
-
-    def _init_engine(self):
-        if self._platform == "darwin":
-            self._mode = "macos"
-            return
-        try:
-            import pyttsx3
-            engine = pyttsx3.init()
-            engine.setProperty("rate",   TTS_RATE)
-            engine.setProperty("volume", TTS_VOLUME)
-            self._engine = engine
-            self._mode   = "pyttsx3"
-        except Exception:
-            self._mode = "print"
-            print("[Speaker] Warning: no TTS engine found. Using print-only mode.")
+        self._engine = build_engine()
 
     def speak(self, text: str):
-        """Speak the given text aloud."""
-        print(f"Jarvis: {text}")
-        if self._mode == "macos":
-            # Escape double-quotes to avoid shell injection
-            safe = text.replace('"', '\"')
-            subprocess.run(["say", safe], check=False)
-        elif self._mode == "pyttsx3":
+        if not text:
+            return
+        print(f"\nJarvis: {text}\n")
+        try:
+            # Update HUD if available
+            try:
+                from jarvis import hud
+                hud.set_state("speaking", text[:40] + "..." if len(text) > 40 else text)
+            except Exception:
+                pass
+
             self._engine.say(text)
             self._engine.runAndWait()
-        # print-only mode already printed above
 
-    def set_voice(self, voice_id: str):
-        """Change pyttsx3 voice by ID (no-op on macOS)."""
-        if self._mode == "pyttsx3" and self._engine:
-            self._engine.setProperty("voice", voice_id)
+            try:
+                from jarvis import hud
+                hud.set_state("idle")
+            except Exception:
+                pass
+        except Exception as e:
+            print(f"[Speaker] TTS error: {e}")
+            # Reinitialise engine on failure
+            try:
+                self._engine = build_engine()
+            except Exception:
+                pass
 
-    def list_voices(self) -> list[str]:
-        """Return available pyttsx3 voice IDs."""
-        if self._mode == "pyttsx3" and self._engine:
-            return [v.id for v in self._engine.getProperty("voices")]
-        return []
+    def set_rate(self, rate: int):
+        self._engine.setProperty("rate", rate)
+
+    def set_volume(self, volume: float):
+        self._engine.setProperty("volume", max(0.0, min(1.0, volume)))
