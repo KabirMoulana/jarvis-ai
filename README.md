@@ -2,7 +2,7 @@
 
 ```
   ╔══════════════════════════════════════════════════╗
-  ║         J.A.R.V.I.S  —  v3.0                    ║
+  ║         J.A.R.V.I.S  —  v3.1                    ║
   ║   Just A Rather Very Intelligent System          ║
   ╚══════════════════════════════════════════════════╝
 ```
@@ -19,27 +19,39 @@
 
 ## What is this?
 
-J.A.R.V.I.S. is a voice-activated AI assistant built to replicate the feel of Tony Stark's AI — runs locally on your machine, no cloud subscriptions required. Speak to it, and it responds.
+J.A.R.V.I.S. is a voice-activated AI assistant built to replicate the feel of Tony Stark's AI — runs **fully locally**, no cloud subscriptions required. Say "Hey Jarvis" and it responds.
 
 ---
 
-## Features (Day 1)
+## Features
 
-| Skill | Command examples |
-|-------|-----------------|
-| 🎬 Cinematic boot | Starts with an animated banner every time |
-| 🕐 Time & Date | "What time is it?" / "What day is today?" |
-| 📋 Daily Briefing | "Morning briefing" / "Good morning" |
-| 💻 System Vitals | "System status" / "How's my CPU?" / "Check battery" |
-| ⏱️ Timers | "Set a timer for 10 minutes" / "Set a pasta timer for 20 minutes" |
-| 📰 News | "What's the news?" / "Tech headlines" |
-| 🌐 Network | "What's my IP?" / "Ping google.com" / "Check internet" |
-| 🌦️ Weather | "Weather in London" |
-| 🎵 Spotify | "Play next track" / "What song is this?" / "Pause" |
-| 🔍 Search | "Search for quantum computing" / "Wikipedia Einstein" |
-| 📝 Notes | "Note that meeting at 3pm" / "Show my notes" |
-| 😄 Jokes | "Tell me a joke" |
-| 🧠 AI Brain | Everything else → Ollama LLM (llama3.2) |
+### Day 1 — The Foundation
+| Skill | Voice commands |
+|-------|---------------|
+| 🎬 Boot sequence | Animated banner on every startup |
+| 🕐 Time & Date | *"What time is it?"* / *"What day is today?"* |
+| 📋 Daily Briefing | *"Morning briefing"* / *"Good morning"* |
+| 💻 System Vitals | *"System status"* / *"How's my CPU?"* |
+| ⏱️ Timers | *"Set a pasta timer for 10 minutes"* |
+| 📰 News | *"Tech headlines"* / *"What's the news?"* |
+| 🌐 Network | *"What's my IP?"* / *"Ping google.com"* |
+| 🌦️ Weather | *"Weather in London"* |
+| 🎵 Spotify | *"Next track"* / *"What song is this?"* |
+| 🔒 Face Auth | Webcam owner verification (optional) |
+| 🧠 AI Brain | Everything else → local Ollama LLM |
+
+### Day 2 — Intelligence Upgrade
+| Skill | Voice commands |
+|-------|---------------|
+| 🗣️ Wake Word | *"Hey Jarvis"* activates listening |
+| 🖥️ Live HUD | Terminal status display — listening/thinking/speaking |
+| ⏰ Reminders | *"Remind me at 3pm to call John"* |
+| 📅 Calendar | *"What's on my schedule today?"* |
+| 📧 Email | *"Read my unread emails"* / *"Check my email"* |
+| 📈 Stocks | *"How is AAPL doing?"* / *"Market summary"* |
+| ₿ Crypto | *"Bitcoin price"* / *"Ethereum price"* |
+| 🌍 Translate | *"Translate hello to French"* |
+| 🎙️ Voice Profile | Auto-selects deepest JARVIS-like TTS voice |
 
 ---
 
@@ -53,23 +65,16 @@ cd jarvis-ai
 # 2. Install dependencies
 pip install -r requirements.txt
 
-# 3. Install & start Ollama (local LLM)
+# 3. Install & start Ollama
 # https://ollama.com
 ollama pull llama3.2
 
-# 4. Copy env config
+# 4. Configure
 cp .env.example .env
+# Edit .env with your email credentials etc.
 
 # 5. Run JARVIS
 python main.py
-```
-
-### Environment Variables (`.env`)
-```env
-JARVIS_NAME=Jarvis
-USER_TITLE=sir
-OLLAMA_MODEL=llama3.2
-WAKE_WORD=jarvis
 ```
 
 ---
@@ -78,30 +83,40 @@ WAKE_WORD=jarvis
 
 ```
 jarvis-ai/
-├── main.py                    # Entry point
+├── main.py
+├── .env.example
 ├── jarvis/
-│   ├── boot.py                # Cinematic startup sequence
-│   ├── config.py              # All settings
+│   ├── boot.py              # Cinematic startup
+│   ├── config.py            # All settings
+│   ├── hud.py               # Live terminal HUD ★ Day 2
 │   ├── brain/
-│   │   ├── command_router.py  # Intent detection
-│   │   └── ollama_client.py   # Local LLM interface
+│   │   ├── command_router.py
+│   │   └── ollama_client.py
 │   ├── voice/
-│   │   ├── listener.py        # Microphone → text
-│   │   └── speaker.py        # Text → speech
+│   │   ├── listener.py
+│   │   └── speaker.py
 │   ├── memory/
-│   │   ├── conversation.py    # Rolling conversation memory
-│   │   └── note_taker.py     # Persistent notes
+│   │   ├── conversation.py
+│   │   ├── note_taker.py
+│   │   └── reminders.json   # auto-generated
 │   └── skills/
-│       ├── vitals.py          # CPU, RAM, battery
-│       ├── briefing.py        # Daily briefing
-│       ├── timer.py           # Countdown timers
-│       ├── news.py            # News headlines
-│       ├── ip_network.py      # Network diagnostics
-│       ├── spotify_control.py # Spotify control
-│       ├── system_skills.py   # App launcher, volume
-│       ├── web_skills.py      # Search, Wikipedia, weather
-│       ├── jokes.py           # Jokes
-│       └── face_auth.py       # Face recognition (optional)
+│       ├── vitals.py
+│       ├── briefing.py
+│       ├── timer.py
+│       ├── news.py
+│       ├── ip_network.py
+│       ├── wake_word.py     # ★ Day 2
+│       ├── reminders.py     # ★ Day 2
+│       ├── calendar_skill.py# ★ Day 2
+│       ├── email_skill.py   # ★ Day 2
+│       ├── crypto_stocks.py # ★ Day 2
+│       ├── translate.py     # ★ Day 2
+│       ├── voice_profile.py # ★ Day 2
+│       ├── spotify_control.py
+│       ├── system_skills.py
+│       ├── web_skills.py
+│       ├── jokes.py
+│       └── face_auth.py
 └── requirements.txt
 ```
 
@@ -109,10 +124,10 @@ jarvis-ai/
 
 ## Roadmap
 
-- [x] Day 1 — Core skills, boot sequence, vitals, timers, news, network
-- [ ] Day 2 — Wake word detection, email reading, calendar, reminders
-- [ ] Day 3 — Home automation, multi-language, voice cloning
-- [ ] Day 4 — GUI HUD display, suit-up animation
+- [x] Day 1 — Core skills, boot, vitals, timers, news, network, Spotify
+- [x] Day 2 — Wake word, HUD, email, calendar, reminders, crypto, translation
+- [ ] Day 3 — Home automation, multi-room audio, voice cloning, WhatsApp
+- [ ] Day 4 — GUI HUD overlay, suit-up animation, skill plugins
 
 ---
 
