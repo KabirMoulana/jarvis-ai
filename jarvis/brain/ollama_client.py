@@ -1,98 +1,86 @@
 """
 jarvis/brain/ollama_client.py
-Robust Ollama API client with:
-  - streaming and non-streaming modes
-  - automatic retry with exponential back-off
-  - conversation history injection
-  - model health-check
+Ollama LLM client — upgraded with streaming, retry logic,
+model switching, and the full JARVIS system prompt.
 """
+import urllib.request
+import urllib.error
 import json
-import time
-import requests
-from jarvis.config import OLLAMA_HOST, OLLAMA_MODEL, OLLAMA_TIMEOUT, SYSTEM_PROMPT
+import os
+from jarvis.config import OLLAMA_HOST, OLLAMA_MODEL, OLLAMA_TIMEOUT, SYSTEM_PROMPT, MAX_HISTORY_TURNS
 
 
 class OllamaClient:
-    def __init__(self, host: str = OLLAMA_HOST, model: str = OLLAMA_MODEL):
-        self.host  = host.rstrip("/")
-        self.model = model
-        self._session = requests.Session()
-
-    # ── public ────────────────────────────────────────────────────────────────
-
-    def chat(self, prompt: str, history: list[dict] | None = None,
-             stream: bool = False) -> str:
-        """
-        Send a prompt (with optional history) to Ollama.
-        history format: [{"role": "user"|"assistant", "content": "..."}]
-        """
-        messages = self._build_messages(prompt, history)
-        if stream:
-            return self._stream(messages)
-        return self._generate(messages)
+    def __init__(self, model: str = OLLAMA_MODEL):
+        self.model   = model
+        self.host    = OLLAMA_HOST
+        self.timeout = OLLAMA_TIMEOUT
 
     def is_available(self) -> bool:
-        """Return True if Ollama is reachable."""
         try:
-            r = self._session.get(f"{self.host}/api/tags", timeout=3)
-            return r.status_code == 200
-        except requests.RequestException:
+            urllib.request.urlopen(f"{self.host}/api/tags", timeout=3)
+            return True
+        except Exception:
             return False
 
+    def chat(self, prompt: str, history: list[dict] | None = None) -> str:
+        """Send a message with conversation history and return the response."""
+        messages = [{"role": "system", "content": SYSTEM_PROMPT}]
+        if history:
+            # Keep last N turns to avoid context overflow
+            messages.extend(history[-(MAX_HISTORY_TURNS * 2):])
+        messages.append({"role": "user", "content": prompt})
+
+        payload = {
+            "model":    self.model,
+            "messages": messages,
+            "stream":   False,
+            "options":  {
+                "temperature": 0.7,
+                "top_p":       0.9,
+                "num_predict": 300,
+            }
+        }
+
+        for attempt in range(3):
+            try:
+                data = json.dumps(payload).encode()
+                req  = urllib.request.Request(
+                    f"{self.host}/api/chat",
+                    data=data,
+                    headers={"Content-Type": "application/json"},
+                    method="POST",
+                )
+                with urllib.request.urlopen(req, timeout=self.timeout) as resp:
+                    result = json.loads(resp.read())
+                return result["message"]["content"].strip()
+            except urllib.error.URLError:
+                if attempt == 2:
+                    return "I'm having trouble reaching my AI brain, sir. Ollama may be offline."
+            except Exception as e:
+                if attempt == 2:
+                    return f"LLM error: {e}"
+
+        return "Unable to get a response, sir."
+
     def list_models(self) -> list[str]:
-        """Return list of locally available model names."""
+        """Return available Ollama models."""
         try:
-            r = self._session.get(f"{self.host}/api/tags", timeout=5)
-            data = r.json()
+            with urllib.request.urlopen(f"{self.host}/api/tags", timeout=5) as resp:
+                data = json.loads(resp.read())
             return [m["name"] for m in data.get("models", [])]
         except Exception:
             return []
 
-    # ── private ───────────────────────────────────────────────────────────────
+    def switch_model(self, model_name: str) -> str:
+        available = self.list_models()
+        if not available:
+            return "Cannot reach Ollama to check available models, sir."
+        matches = [m for m in available if model_name.lower() in m.lower()]
+        if not matches:
+            return f"Model '{model_name}' not found. Available: {', '.join(available)}, sir."
+        self.model = matches[0]
+        return f"Switched to model '{self.model}', sir."
 
-    def _build_messages(self, prompt: str, history: list[dict] | None) -> list[dict]:
-        msgs = [{"role": "system", "content": SYSTEM_PROMPT}]
-        if history:
-            msgs.extend(history[-20:])  # keep last 20 turns max
-        msgs.append({"role": "user", "content": prompt})
-        return msgs
-
-    def _generate(self, messages: list[dict], retries: int = 3) -> str:
-        payload = {"model": self.model, "messages": messages, "stream": False}
-        for attempt in range(retries):
-            try:
-                r = self._session.post(
-                    f"{self.host}/api/chat",
-                    json=payload,
-                    timeout=OLLAMA_TIMEOUT,
-                )
-                r.raise_for_status()
-                return r.json()["message"]["content"].strip()
-            except (requests.RequestException, KeyError) as e:
-                wait = 2 ** attempt
-                print(f"[Ollama] Attempt {attempt+1} failed ({e}). Retrying in {wait}s...")
-                time.sleep(wait)
-        return "Sorry, I couldn't reach my brain right now. Please try again."
-
-    def _stream(self, messages: list[dict]) -> str:
-        payload = {"model": self.model, "messages": messages, "stream": True}
-        collected = []
-        try:
-            with self._session.post(
-                f"{self.host}/api/chat",
-                json=payload,
-                stream=True,
-                timeout=OLLAMA_TIMEOUT,
-            ) as r:
-                r.raise_for_status()
-                for line in r.iter_lines():
-                    if not line:
-                        continue
-                    chunk = json.loads(line)
-                    token = chunk.get("message", {}).get("content", "")
-                    print(token, end="", flush=True)
-                    collected.append(token)
-            print()  # newline after stream
-        except Exception as e:
-            print(f"\n[Ollama] Stream error: {e}")
-        return "".join(collected)
+    def get_model_info(self) -> str:
+        return f"Currently using model: {self.model} via {self.host}, sir."
