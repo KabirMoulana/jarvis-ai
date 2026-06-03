@@ -119,7 +119,7 @@ def run():
             response = get_latest_from(args[0])
 
         # ── Crypto / Stocks ───────────────────────────────────────────────────
-        elif intent == "crypto_prie":
+        elif intent == "crypto_price":
             coin = next((a for a in args if a), "bitcoin")
             response = get_crypto_price(coin)
 
