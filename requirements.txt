@@ -59,3 +59,45 @@ psutil>=5.9.0
 
 # Stocks (optional)
 # yfinance>=0.2.36
+
+# ── Day 4 additions ───────────────────────────────────────────────────────────
+# WhatsApp messaging
+# pywhatkit>=5.4
+
+# Voice cloning
+# elevenlabs>=0.2.26
+
+# AI image generation (local)
+# diffusers>=0.21.0
+# torch>=2.0.0
+
+# Object detection
+# ultralytics>=8.0.0
+
+# Document reading
+# PyPDF2>=3.0.0
+# python-docx>=0.8.11
+
+# QR code generation
+# qrcode[pil]>=7.4.2
+
+# Language detection
+# langdetect>=1.0.9
+
+# Sentiment analysis
+# textblob>=0.17.1
+
+# Trivia / fun
+# (no extra deps — uses open APIs)
+
+# ── Day 4 additions ───────────────────────────────────────────────────────────
+# pywhatkit>=5.4
+# elevenlabs>=0.2.26
+# diffusers>=0.21.0
+# torch>=2.0.0
+# ultralytics>=8.0.0
+# PyPDF2>=3.0.0
+# python-docx>=0.8.11
+# qrcode[pil]>=7.4.2
+# langdetect>=1.0.9
+# textblob>=0.17.1
