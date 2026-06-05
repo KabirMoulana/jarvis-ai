@@ -209,5 +209,5 @@ def _extract_timer_label(text: str) -> str:
     return "timer"
 
 
-if __name__ == "__main__"
+if __name__ == "__main__":
     run()
