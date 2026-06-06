@@ -2,7 +2,7 @@
 
 ```
   ╔══════════════════════════════════════════════════╗
-  ║         J.A.R.V.I.S  —  v6.0                    ║
+  ║         J.A.R.V.I.S  —  v6.1                    ║
   ║   Just A Rather Very Intelligent System          ║
   ╚══════════════════════════════════════════════════╝
 ```
@@ -10,8 +10,8 @@
 **An open-source Iron Man JARVIS — voice-powered, locally-run AI assistant**
 
 ![Python](https://img.shields.io/badge/Python-3.11+-blue?style=flat-square)
-![Skills](https://img.shields.io/badge/Skills-147+-green?style=flat-square)
-![Commits](https://img.shields.io/badge/Commits-216+-orange?style=flat-square)
+![Skills](https://img.shields.io/badge/Skills-152+-green?style=flat-square)
+![Commits](https://img.shields.io/badge/Commits-224+-orange?style=flat-square)
 ![License](https://img.shields.io/badge/License-MIT-purple?style=flat-square)
 
 </div>
@@ -20,7 +20,7 @@
 
 ## What is this?
 
-J.A.R.V.I.S. is a voice-activated AI assistant built to replicate Tony Stark's AI. Runs **fully locally**, responds to "Hey Jarvis", and has **147+ skills**.
+J.A.R.V.I.S. is a voice-activated AI assistant built to replicate Tony Stark's AI. Runs **fully locally**, responds to "Hey Jarvis", and has **152+ skills** across 20 categories.
 
 ---
 
@@ -37,42 +37,43 @@ python main.py
 
 ---
 
-## 147+ Skills Across 20 Categories
+## 152+ Skills
 
 | Category | Skills |
 |----------|--------|
-| 🎬 **Core** | Boot, wake word, HUD, voice profile, persona, plugin system |
-| 📋 **Productivity** | Reminders, alarms, timers, calendar, to-do, daily planner, focus, Pomodoro, time tracker |
+| 🎬 **Core** | Boot, wake word, HUD, voice profile, persona, plugin system, JARVIS stats |
+| 📋 **Productivity** | Reminders, alarms, timers, calendar, to-do, planner, focus, Pomodoro, time tracker, goal tracker |
 | 💻 **System** | Vitals, process manager, health monitor, screenshots, clipboard history, brightness, dark mode |
 | 📧 **Communication** | Email reader, composer, scheduler, templates, WhatsApp, contact book |
-| 📰 **Information** | News, news summarizer, weather alerts, tech news (HN/TC), Wikipedia deep |
-| 💰 **Finance** | Crypto prices, alerts, portfolio, stocks, screener, portfolio tracker, currency, budget planner, investment calculator |
-| 🎵 **Media** | Spotify, music mood, internet radio, music info, podcast finder |
+| 📰 **Information** | News, news summarizer, weather alerts, tech news, Wikipedia deep, science facts |
+| 💰 **Finance** | Crypto prices/alerts/portfolio, stocks/screener, currency, budget planner, investment calculator |
+| 🎵 **Media** | Spotify, music mood, internet radio, ambient sounds, music info, podcast finder |
 | 🌍 **World** | World clock, IP geolocation, weather, air quality, traffic, travel planner, satellite tracker |
-| 🏋️ **Health** | Health tracker, workout tracker, sleep tracker, meditation, food nutrition, mental health |
-| 🧠 **Learning** | Flashcards, language quiz, trivia, brain games, study timer, math quiz, vocabulary builder, interview prep |
+| 🏋️ **Health** | Health tracker, workout, sleep tracker, meditation, food nutrition, mental health |
+| 🧠 **Learning** | Flashcards, language quiz, trivia, brain games, study timer, vocabulary builder, interview prep |
 | 🔧 **Developer** | API tester, regex helper, git helper, code runner, code explainer, periodic table, acronym expander |
 | 🌐 **Web** | Web search, Wikipedia, summarizer, image search, AI image generation, startup news |
 | 🏠 **Smart Home** | Home Assistant, device control, scenes (Movie/Sleep/Work/Party), automation scheduler |
 | 🎮 **Fun** | Jokes, trivia, brain games, word games, story generator, magic 8-ball, morse code |
 | 📁 **Files** | File manager, organizer, document reader, voice memos, clipboard history, PDF tools |
-| 🔒 **Security** | Face auth, password generator, network scanner, hotkey launcher |
+| 🔒 **Security** | Face auth, password generator, 2FA TOTP, network scanner, hotkey launcher |
 | 🚀 **Space** | Astronomy, moon phase, ISS tracker, satellite passes, NASA APOD |
-| 📊 **Analytics** | Session logger, sentiment analysis, speech coach, daily digest |
+| 🎉 **Events** | Event planner (birthday/wedding/conference), countdown, birthday tracker |
 | 🛒 **Lifestyle** | Shopping list, recipe finder, book tracker, movie finder, travel planner |
-| 💡 **Wisdom** | Life tips, quotes, daily challenge, smart suggestions, science facts |
+| 💡 **Wisdom** | Life tips, quotes, daily challenge, smart suggestions, speech coach |
 
 ---
 
 ## Roadmap
 
-- [x] Day 1 — Core skills, boot, vitals, timers, news
-- [x] Day 2 — Wake word, HUD, email, calendar, crypto
+- [x] Day 1 — Core, boot, vitals, timers
+- [x] Day 2 — Wake word, HUD, email, calendar
 - [x] Day 3 — Smart home, health, focus, translation
-- [x] Day 4 — GUI HUD, WhatsApp, object detection, 30 skills
-- [x] Day 5 — 50 new skills: portfolio, travel, games, radio
-- [x] Day 6 — 28 more: budget, interview prep, PDF tools, daily digest
-- [ ] Day 7 — Web dashboard, multi-user support, skill marketplace
+- [x] Day 4 — GUI, WhatsApp, 30 new skills
+- [x] Day 5 — 50 skills: portfolio, travel, games, radio
+- [x] Day 6 — Budget, interview prep, PDF tools, daily digest
+- [x] Day 6.1 — Goal tracker, 2FA, ambient sounds, event planner
+- [ ] Day 7 — Web dashboard, multi-user, skill marketplace
 
 ---
 
